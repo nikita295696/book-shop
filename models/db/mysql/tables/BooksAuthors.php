@@ -39,18 +39,21 @@ class BooksAuthors extends ActiveRecord implements IMigration
     public static function findAuthorsFromBook($idBook, $idAuthor = null){
         $bookTable = static::tableName();
         $thisFields = BooksAuthors::getModelFileds();
-        $query = `select a.`.$thisFields['idBook'].`, a.`.$thisFields['idAuthor'].` from `.$bookTable.` as b, `.Author::tableName().` as a where b.`.$thisFields['idBook'].` = :idBook `;
+        $query = 'select a.'.Author::getModelFileds()['id'].', a.'.Author::getModelFileds()['name'].' from '.$bookTable.' as b, '.Author::tableName().' as a where b.'.$thisFields['idBook'].' = :idBook ';
         $params = [':idBook'=>$idBook];
         if(isset($idAuthor) && !empty($idAuthor)){
-            $query .= `and `. $thisFields['idAuthor'] .` = :idAuthor`;
+            $query .= 'and '. $thisFields['idAuthor'] .' = :idAuthor';
             $params[':idAuthor'] = $idAuthor;
         }
         try {
             $db = self::getConnection();
+
             $sth = $db->prepare($query);
             $sth->execute($params);
-            return $sth->fetchAll(\PDO::FETCH_ASSOC);
+            $fetch =  $sth->fetchAll(\PDO::FETCH_ASSOC);
+            return $fetch;
         }catch (\Exception $ex){
+            echo $ex;
             return null;
         }
     }

@@ -37,7 +37,7 @@ class BooksPhotos extends ActiveRecord implements IMigration
     }
 
     public static function findByIdBook($idBook){
-        $query = `select * from `.static::tableName().` where `.static::tableName().` = :idBook`;
+        $query = 'select * from '.static::tableName().' where '.self::getModelFileds()['idBook'].' = :idBook';
         $params = [':idBook' => $idBook];
         try {
             $db = self::getConnection();

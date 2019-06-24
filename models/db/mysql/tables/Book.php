@@ -39,6 +39,10 @@ class Book extends ActiveRecord implements IMigration
         return $obj;
     }
 
+    public static function findByPkAndPublisherName($id){
+
+    }
+
     public static function findByCategoryId($id){
         $thisFields = static::getModelFileds();
         $query = 'SELECT b.'.$thisFields['id'].', b.'.$thisFields['name'].', b.'. $thisFields['yearPublisher'] .', b.'.$thisFields['idPublisher'].', b.'.$thisFields['idCategory'].', p.'.Publisher::getModelFileds()['name'].' as `publisherName`, c.'.Category::getModelFileds()['name'].' as `categoryName` from '.static::tableName().' as b, '.Publisher::tableName().' as p, '.Category::tableName().' as c WHERE p.'.Publisher::getModelFileds()['id'].' = b.'.$thisFields['idPublisher'].' and c.'.Category::getModelFileds()['id'].' = b.'.$thisFields['idCategory'].' and b.'.$thisFields['idCategory'].' = :id';

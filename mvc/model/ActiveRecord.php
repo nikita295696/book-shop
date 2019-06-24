@@ -21,7 +21,7 @@ class ActiveRecord
         $this->fields = array();
         $this->operatorSave = $operator;
         try {
-            $db = self::getConnection();
+            $db = static::getConnection();
 
             $stmt = $db->query('select * from '.static::tableName().'');
 
@@ -99,7 +99,7 @@ class ActiveRecord
                         $str_columns .= $mssColumn[count($mssColumn) - 1];
                         $str_values .= $mssValue[count($mssColumn) - 1];
 
-                        $query = "INSERT INTO ".self::tableName()." ($str_columns) VALUES ($str_values);";
+                        $query = "INSERT INTO ".static::tableName()." ($str_columns) VALUES ($str_values);";
                         break;
                     }
                 case 'update':
@@ -122,13 +122,13 @@ class ActiveRecord
                             }
                             $i++;
                         }
-                        $query = "UPDATE ".self::tableName()." set $set where $where";
+                        $query = "UPDATE ".static::tableName()." set $set where $where";
                         break;
                     }
             }
 
             try {
-                $db = self::getConnection();
+                $db = static::getConnection();
 
                 $db->query($query);
 
@@ -157,10 +157,10 @@ class ActiveRecord
             }
         }
         if($delete !== false) {
-            $query = "DELETE FROM ".self::tableName()." WHERE $delete";
+            $query = "DELETE FROM ".static::tableName()." WHERE $delete";
 
             try {
-                $db = self::getConnection();
+                $db = static::getConnection();
 
                 $db->query($query);
 
@@ -184,7 +184,7 @@ class ActiveRecord
                     }
                 }
 
-                $db = self::getConnection();
+                $db = static::getConnection();
 
                 $stmt = $db->prepare($query);
 
@@ -196,7 +196,7 @@ class ActiveRecord
         }
         else{
             try {
-                $db = self::getConnection();
+                $db = static::getConnection();
 
                 $stmt = $db->prepare($query);
 
@@ -214,7 +214,7 @@ class ActiveRecord
 
         try {
 
-            $db = self::getConnection();
+            $db = static::getConnection();
 
             $stmt = $db->prepare($query);
 
@@ -230,7 +230,7 @@ class ActiveRecord
 
     public static function find($condition,$params){
         $query = "select * from " . static::tableName() . "  ";
-        $stmt = self::invokeDb($query, $condition,$params);
+        $stmt = static::invokeDb($query, $condition,$params);
         if($stmt !== null)
         {
             $arr = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -249,7 +249,7 @@ class ActiveRecord
 
     public static function findByPk($postID){
         $post = new static();
-        $query = "select * from " . self::tableName() . " where " . $post->getFields()[0] . " = $postID";
+        $query = "select * from " . static::tableName() . " where " . $post->getFields()[0] . " = $postID";
 
         $stmt = static::invokeDbPk($query);
         if($stmt !== null)

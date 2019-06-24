@@ -202,6 +202,7 @@ class MySqlDb implements IDb
             $resBook["photos"] = BooksPhotos::findByIdBook($resBook['data']['id']);
             $resBook["breadcrump"] = $this->_getParentCategory($resBook['data']['idCategory']);
         }
+        return $resBook;
     }
 
     function findBooksByCategoryId($id)
