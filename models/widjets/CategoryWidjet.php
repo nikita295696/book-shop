@@ -9,7 +9,9 @@
 namespace models\widjets;
 
 
-class CategoryWidjet
+use mvc\model\IWidjet;
+
+class CategoryWidjet implements IWidjet
 {
     public static function render($categories){
         $html = "";

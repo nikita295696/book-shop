@@ -121,7 +121,7 @@ script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')-->
 <!-- <script src="<?=PUBLIC_URL?>site/js/slick.min.js"></script> -->
 <script src="<?=PUBLIC_URL?>site/js/nouislider.min.js"></script>
 <script src="<?=PUBLIC_URL?>site/js/jquery.zoom.min.js"></script>
-<!-- <script src="<?=PUBLIC_URL?>site/js/main.js"></script> -->
+<script src="<?=PUBLIC_URL?>site/js/main.js"></script>
 </body>
 
 </html>

@@ -20,10 +20,11 @@ class ProductsController extends SiteController
         $this->render("view", ["id" => $bookId, "book" => $book]);
     }
 
-    public function category($categoryId = 1){
+    public function category($categoryId){
         $db = DbRepository::getDb();
         $books = $db->findBooksByCategoryId($categoryId);
         $books = $books === null ? [] : $books;
-        $this->render("index", ['books' => $books]);
+        $breadcramp = $db->getBreadcramp($categoryId);
+        $this->render("index", ['books' => $books, 'breadcramp' => $breadcramp]);
     }
 }

@@ -54,9 +54,10 @@ class MySqlDb implements IDb
             try {
                 if(isset($id) && !empty($id)){
                     $category = Category::findByPk($id);
-                if(isset($category) && is_array($category) && count($category) > 0){
-                    $parentCategory = $this->_getParentCategory($category[0][Category::getModelFileds()['idParentCategory']]);
-                    $parentCategory[] = $category[0];
+                    $categoryArr = $category->toArray();
+                if(isset($categoryArr) && is_array($categoryArr) && count($categoryArr) > 0){
+                    $parentCategory = $this->_getParentCategory($categoryArr['idParentCategory']);
+                    $parentCategory[] = $categoryArr;
                     $res = $parentCategory;
                 }
             }
@@ -194,10 +195,11 @@ class MySqlDb implements IDb
 
     function findBookById($id)
     {
-        $resBook = [];
-        $book = Book::findByPk($id);
+        $resBook = null;
+        $book = Book::findByPkAndPublisherName($id);
         if(isset($book) && !empty($book)){
-            $resBook["data"] = $book->toArray();
+            $resBook = [];
+            $resBook["data"] = $book[0];
             $resBook["authors"] = BooksAuthors::findAuthorsFromBook($resBook['data']['id']);
             $resBook["photos"] = BooksPhotos::findByIdBook($resBook['data']['id']);
             $resBook["breadcrump"] = $this->_getParentCategory($resBook['data']['idCategory']);
@@ -264,5 +266,10 @@ class MySqlDb implements IDb
         $condition = User::getModelFileds()['displayName'] . " like ':name'";
         $params = [':name'=>$name];
         return User::find($condition, $params);
+    }
+
+    function getBreadcramp($baseCategoryId)
+    {
+        return $this->_getParentCategory($baseCategoryId);
     }
 }

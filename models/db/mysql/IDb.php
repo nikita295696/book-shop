@@ -39,4 +39,6 @@ interface IDb
     function deleteBook($id);
     function findById($id, $callback);
     function findByName($name, $callback);
+
+    function getBreadcramp($baseCategoryId);
 }

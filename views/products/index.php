@@ -1,6 +1,11 @@
+<?php
+/** @var array $breadcramp */
+?>
 <div id="store">
     <!-- row -->
     <div class="row">
+
+        <?= \models\widjets\BreadcrampWidjet::render($breadcramp)?>
         <div class="col-md-12">
             <div class="section-title">
                 <?php if(!isset($books)) {?>
@@ -25,9 +30,9 @@
                             <img src="<?= PUBLIC_URL ?>images/book.jpg" alt="">
                         </div>
                         <div class="product-body">
-                            <h3 class="product-price">$32.50</h3>
+                            <h3>Year publisher: <?=$book['yearPublisher']?></h3>
                             <h2 class="product-name"><a
-                                        href="<?= Application::getUrl("products", "view", 2) ?>"><?= $book['title'] ?></a>
+                                        href="<?= Application::getUrl("products", "view", $book['id']) ?>"><?= $book['title'] ?></a>
                             </h2>
                         </div>
                     </div>
