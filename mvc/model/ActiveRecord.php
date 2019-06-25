@@ -228,19 +228,26 @@ class ActiveRecord
         return $stmt;
     }
 
-    public static function find($condition,$params){
+    /**
+     * @param $condition
+     * @param $params
+     * @return ActiveRecord|null
+     */
+    public static function find($condition, $params){
         $query = "select * from " . static::tableName() . "  ";
         $stmt = static::invokeDb($query, $condition,$params);
         if($stmt !== null)
         {
             $arr = $stmt->fetch(\PDO::FETCH_ASSOC);
-            $arcls = new static('update');
-            foreach ($arr as $key => $value)
-            {
-                $arcls->$key = $value;
+            if(!empty($arr)) {
+                $arcls = new static('update');
+                foreach ($arr as $key => $value) {
+                    $arcls->$key = $value;
+                }
+                return $arcls;
+            }else{
+                return null;
             }
-
-            return $arcls;
         }
         else{
             return null;
@@ -255,13 +262,16 @@ class ActiveRecord
         if($stmt !== null)
         {
             $arr = $stmt->fetch(\PDO::FETCH_ASSOC);
-            $arcls = new static('update');
-            foreach ($arr as $key => $value)
-            {
-                $arcls->$key = $value;
-            }
+            if(!empty($arr)) {
+                $arcls = new static('update');
+                foreach ($arr as $key => $value) {
+                    $arcls->$key = $value;
+                }
 
-            return $arcls;
+                return $arcls;
+            }else{
+                return null;
+            }
         }
         else{
             return null;
@@ -275,14 +285,18 @@ class ActiveRecord
         {
             $arcls = [];
             $arr = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            if(!empty($arr)) {
+                foreach ($arr as $column) {
 
-            foreach ($arr as $column) {
-
-                $columnArcls = new static('update');
-                foreach ($column as $key => $value) {
-                    $columnArcls->$key = $value;
+                    $columnArcls = new static('update');
+                    foreach ($column as $key => $value) {
+                        $columnArcls->$key = $value;
+                    }
+                    $arcls[] = $columnArcls;
                 }
-                $arcls[] = $columnArcls;
+            }
+            else{
+                $arcls = null;
             }
 
             return $arcls;

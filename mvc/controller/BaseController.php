@@ -6,7 +6,7 @@ class BaseController
 {
     private $controllerName;
     private $directoryViews = 'views';
-    private $layoutFile = "layouts\\main.php";
+    protected $layoutFile = "layouts\\main.php";
     protected $models = [];
 
     /**

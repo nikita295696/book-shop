@@ -38,4 +38,8 @@ class User extends ActiveRecord implements IMigration
         }
         return $obj;
     }
+
+    public static function getHashPassword($pass){
+        return md5(md5($pass) . "3!5");
+    }
 }

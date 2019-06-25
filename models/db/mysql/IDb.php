@@ -41,4 +41,5 @@ interface IDb
     function findByName($name, $callback);
 
     function getBreadcramp($baseCategoryId);
+    function loginUser($login, $pass);
 }

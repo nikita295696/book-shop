@@ -268,6 +268,16 @@ class MySqlDb implements IDb
         return User::find($condition, $params);
     }
 
+    /**
+     * @param $login
+     * @param $pass
+     * @return \mvc\model\ActiveRecord|null
+     */
+    function loginUser($login, $pass){
+        $userFileds = User::getModelFileds();
+        return User::find($userFileds['displayName'] . ' = :displayName and ' . $userFileds['password'] . " = :pass", [":displayName" => $login, ":pass" => $pass]);
+    }
+
     function getBreadcramp($baseCategoryId)
     {
         return $this->_getParentCategory($baseCategoryId);

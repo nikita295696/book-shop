@@ -5,7 +5,7 @@
     <!-- row -->
     <div class="row">
 
-        <?= \models\widjets\BreadcrampWidjet::render($breadcramp)?>
+        <?= \models\widjets\BreadcrampWidjet::render(isset($breadcramp) ? $breadcramp : null)?>
         <div class="col-md-12">
             <div class="section-title">
                 <?php if(!isset($books)) {?>

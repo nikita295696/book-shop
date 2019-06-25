@@ -20,6 +20,12 @@
 </head>
 
 <body>
+<?php
+echo "<pre>";
+echo $_SERVER['REQUEST_METHOD'] . "<br/>";
+print_r($_REQUEST);
+echo "</pre>";
+?>
 <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
         <div class="content-wrapper d-flex align-items-center auth auth-bg-1 theme-one">
@@ -37,8 +43,7 @@
                                     <div class="input-group-append"><span class="input-group-text"><i class="mdi mdi-check-circle-outline"></i></span></div>
                                 </div>
                             </div>
-                            <div class="form-group"><button class="btn btn-primary submit-btn btn-block">Login</button></div>
-                            <div class="form-group"><button class="btn btn-block g-login"><!--img.mr-3(src='/admin/images/samples/weather.svg', alt='')-->Log in with Google</button></div>
+                            <div class="form-group"><button type="submit" class="btn btn-primary submit-btn btn-block">Login</button></div>
                         </form>
                     </div>
                     <ul class="auth-footer">
