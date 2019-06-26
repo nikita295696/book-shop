@@ -20,12 +20,6 @@
 </head>
 
 <body>
-<?php
-echo "<pre>";
-echo $_SERVER['REQUEST_METHOD'] . "<br/>";
-print_r($_REQUEST);
-echo "</pre>";
-?>
 <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
         <div class="content-wrapper d-flex align-items-center auth auth-bg-1 theme-one">

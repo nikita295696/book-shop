@@ -104,7 +104,7 @@ class MySqlDb implements IDb
     function updateCategory($category)
     {
         $dbCategory = Category::findByPk($category[Category::getModelFileds()['id']]);
-        if(isset($dbCategory) && !empty($book)) {
+        if(isset($dbCategory) && !empty($dbCategory)) {
             foreach ($category as $key => $value) {
                 $dbCategory->$key = $value;
             }

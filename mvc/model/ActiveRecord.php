@@ -83,8 +83,10 @@ class ActiveRecord
                     {
                         foreach ($this->properties as $key => $value)
                         {
-                            $mssColumn[] = $key;
-                            $mssValue[] = $value;
+                            if(!empty($value)) {
+                                $mssColumn[] = $key;
+                                $mssValue[] = $value;
+                            }
                         }
 
                         $str_columns = '';
@@ -93,11 +95,12 @@ class ActiveRecord
                         for($i = 0; $i < count($mssColumn) - 1; $i++)
                         {
                             $str_columns .= $mssColumn[$i] . ', ';
-                            $str_values .= "'$mssValue[$i]'" . ', ';
+                            $str_values .= is_string($mssValue[$i]) ? "'$mssValue[$i]'" . ', ' : $mssValue[$i] . ', ';
                         }
 
-                        $str_columns .= $mssColumn[count($mssColumn) - 1];
-                        $str_values .= $mssValue[count($mssColumn) - 1];
+                        $lastIndex = count($mssColumn) - 1;
+                        $str_columns .= $mssColumn[$lastIndex];
+                        $str_values .= is_string($mssValue[$lastIndex]) ? "'$mssValue[$lastIndex]'" : $mssValue[$lastIndex];
 
                         $query = "INSERT INTO ".static::tableName()." ($str_columns) VALUES ($str_values);";
                         break;
@@ -107,18 +110,28 @@ class ActiveRecord
                         $i = 0;
                         $where = "";
                         $set = "";
-                        foreach ($this->properties as $key => $value)
+                        foreach ($this->properties as $key => $valueMss)
                         {
+                            if(is_string($valueMss)){
+                                $value = "'$valueMss'";
+                            }
+                            else if($valueMss === null){
+                                $value = "null";
+                            }
+                            else{
+                                $value = $valueMss;
+                            }
+
                             if($i === 0)
                             {
-                                $where = "$key = '$value'";
+                                $where = "$key = $value";
                             }
                             else if($i === count($this->properties) - 1)
                             {
-                                $set .= " $key = '$value' ";
+                                $set .= " $key = $value ";
                             }
                             else{
-                                $set .= " $key = '$value', ";
+                                $set .= " $key = $value, ";
                             }
                             $i++;
                         }

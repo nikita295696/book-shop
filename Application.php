@@ -64,6 +64,10 @@ class Application
         return $url;
     }
 
+    public static function redirect($url){
+        header('Location: ' . BASE_URL . $url);
+    }
+
     function run() {
 
         $this->controllerName = "controller\\$this->controllerName";

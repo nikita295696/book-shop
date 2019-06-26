@@ -2,7 +2,7 @@ const typeFormCreate = "create";
 const typeFormUpdate = "update";
 
 function updateTable(thisLi, dataId, dataName){
-    var url = `${URL_API}/categories/childs`;
+    var url = `${URL_API}/categoriesChilds`;
 
         if (dataId != "null") {
             url += "/" + dataId;
@@ -67,7 +67,7 @@ function addEventHandlers() {
         const dataName = $(this).attr("data-name");
         $.ajax({
             method: "GET",
-            url: `${URL_API}/categories/childs/${dataId}`,
+            url: `${URL_API}/categoriesChilds/${dataId}`,
             success: function (json) {
                 generateTable(json, dataId, dataName);
             },
@@ -113,22 +113,24 @@ addEventHandlers();
 
 $("#btnSend").click(function (e) {
     const type = $("#form-type").val();
-    var url = `${URL_API}/categories/`;
+    var url = `${URL_API}/categoriesIndex/`;
     var method = "";
+    var additionalParams = "";
     switch (type) {
         case typeFormCreate:
             method = "POST";
             break;
         case typeFormUpdate:
             url += `/${$("#form-cat-id").val()}`;
-            method = "PUT";
+            method = "POST";
+            additionalParams += "&method=put";
             break;
     }
 
     $.ajax({
         url: url,
         method: method,
-        data: $("#category-form").serialize(),
+        data: $("#category-form").serialize() + additionalParams,
         success: function(json){
             console.log(json);
             if(json){

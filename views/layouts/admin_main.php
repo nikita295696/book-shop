@@ -1,3 +1,6 @@
+<?php
+/** @var array $user */
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,9 +45,9 @@
                                                                           id="UserDropdown" href="#"
                                                                           data-toggle="dropdown"
                                                                           aria-expanded="false"><span
-                            class="profile-text">Hello, admin !</span><img class="img-xs rounded-circle"
-                                                                           src="<?=PUBLIC_URL?>admin/images/faces/face1.jpg"
-                                                                           alt="Profile image"></a>
+                                class="profile-text">Hello, <?= $user['displayName']?> !</span><img class="img-xs rounded-circle"
+                                                                src="<?=PUBLIC_URL?>admin/images/faces/face1.jpg"
+                                                                alt="Profile image"></a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown"><a
                             class="dropdown-item p-0">
                             <div class="d-flex border-bottom">
@@ -56,7 +59,7 @@
                                 <div class="py-3 px-4 d-flex align-items-center justify-content-center"><i
                                         class="mdi mdi-alarm-check mr-0 text-gray"></i></div>
                             </div>
-                        </a><a class="dropdown-item" href="<?=PUBLIC_URL?>admin/logout">Sign Out</a></div>
+                        </a><a class="dropdown-item" href="<?=BASE_URL?>admin/logout">Sign Out</a></div>
                 </li>
             </ul>
             <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
@@ -71,9 +74,9 @@
                         <div class="user-wrapper">
                             <div class="profile-image"><img src="<?=PUBLIC_URL?>admin/images/faces/face1.jpg" alt="profile image">
                             </div>
-                            <div class="text-wrapper"><p class="profile-name">admin</p>
+                            <div class="text-wrapper"><p class="profile-name"><?= $user['displayName']?></p>
                                 <div>
-                                    <small class="designation text-muted">admin</small>
+                                    <small class="designation text-muted">Role: <?= $user['role']?></small>
                                     <span class="status-indicator online"></span></div>
                             </div>
                         </div>

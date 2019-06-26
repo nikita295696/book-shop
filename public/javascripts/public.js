@@ -1,1 +1,1 @@
-const URL_API = "/api/v1";
+const URL_API = "/book-shop/api";
