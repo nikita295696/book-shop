@@ -19,4 +19,12 @@ class SiteController extends BaseController
         parent::__construct($controllerName, $moduleName);
         $this->models["categories"] = DbRepository::getDb()->findCategories();
     }
+
+    public function notFound($err){
+
+    }
+
+    public function serviceError($ex){
+
+    }
 }

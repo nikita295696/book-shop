@@ -20,15 +20,14 @@ class ApiController extends \mvc\controller\ApiController
         switch ($_SERVER['REQUEST_METHOD']) {
             case "POST":
                 if(isset($_REQUEST['method'])) {
+                    if(empty($_REQUEST['id_parent_category'])){
+                        $_REQUEST['id_parent_category'] = null;
+                    }
                     $result = DbRepository::getDb()->updateCategory($_REQUEST);
                 }else {
                     $res = DbRepository::getDb()->addCategory($_REQUEST);
                     $result = $res > 0 ? true : false;
                 }
-                break;
-            case "PUT":
-                //$xml = file_get_contents('php://input');
-
                 break;
             case "DELETE":
                 break;
@@ -52,5 +51,67 @@ class ApiController extends \mvc\controller\ApiController
             }
         }
         $this->json($json);
+    }
+
+    public function authors($id)
+    {
+        $result = [];
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case "POST":
+                if(isset($_REQUEST['method'])) {
+                    $result = DbRepository::getDb()->updateAuthor($_REQUEST);
+                }else {
+                    $res = DbRepository::getDb()->addAuthor($_REQUEST);
+                    $result = $res > 0 ? true : false;
+                }
+                break;
+            case "DELETE":
+                break;
+            default:
+                if (empty($id)) {
+                    $authors = DbRepository::getDb()->findAuthors();
+                    $result = [];
+                    if(!empty($authors)){
+                        foreach ($authors as $author) {
+                            $result[] = $author->toArray();
+                        }
+                    }
+                } else {
+                    $result = DbRepository::getDb()->findAuthorById($id);
+                }
+                break;
+        }
+        $this->json($result);
+    }
+
+    public function publishers($id)
+    {
+        $result = [];
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case "POST":
+                if(isset($_REQUEST['method'])) {
+                    $result = DbRepository::getDb()->updatePublisher($_REQUEST);
+                }else {
+                    $res = DbRepository::getDb()->addPublisher($_REQUEST);
+                    $result = $res > 0 ? true : false;
+                }
+                break;
+            case "DELETE":
+                break;
+            default:
+                if (empty($id)) {
+                    $publishers = DbRepository::getDb()->findPublishers();
+                    $result = [];
+                    if(!empty($publishers)){
+                        foreach ($publishers as $publisher) {
+                            $result[] = $publisher->toArray();
+                        }
+                    }
+                } else {
+                    $result = DbRepository::getDb()->findPublisherById($id);
+                }
+                break;
+        }
+        $this->json($result);
     }
 }

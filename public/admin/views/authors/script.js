@@ -73,20 +73,22 @@ $("#btnSend").click(function (e) {
     const type = $("#form-type").val();
     var url = `${URL_API}/authors/`;
     var method = "";
+    var additionalParams = "";
     switch (type) {
         case typeFormCreate:
             method = "POST";
             break;
         case typeFormUpdate:
             url += `/${$("#form-auth-id").val()}`;
-            method = "PUT";
+            method = "POST";
+            additionalParams += "&method=put";
             break;
     }
 
     $.ajax({
         url: url,
         method: method,
-        data: $("#author-form").serialize(),
+        data: $("#author-form").serialize() + additionalParams,
         success: function(json){
             console.log(json);
             if(json){

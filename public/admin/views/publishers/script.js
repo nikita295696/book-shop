@@ -79,6 +79,7 @@ addEventHandlers();
 $("#btnSend").click(function (e) {
     const type = $("#form-type").val();
     var url = `${URL_API}/publishers/`;
+    var additionalParams = "";
     var method = "";
     switch (type) {
         case typeFormCreate:
@@ -86,14 +87,15 @@ $("#btnSend").click(function (e) {
             break;
         case typeFormUpdate:
             url += `/${$("#form-pub-id").val()}`;
-            method = "PUT";
+            method = "POST";
+            additionalParams += "&method=put";
             break;
     }
 
     $.ajax({
         url: url,
         method: method,
-        data: $("#publisher-form").serialize(),
+        data: $("#publisher-form").serialize() + additionalParams,
         success: function(json){
             console.log(json);
             if(json){

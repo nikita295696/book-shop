@@ -143,7 +143,7 @@ class MySqlDb implements IDb
     function updatePublisher($publisher)
     {
         $dbPublisher = Publisher::findByPk($publisher[Publisher::getModelFileds()['id']]);
-        if(isset($dbPublisher) && !empty($book)) {
+        if(isset($dbPublisher) && !empty($dbPublisher)) {
             foreach ($publisher as $key => $value) {
                 $dbPublisher->$key = $value;
             }
@@ -179,7 +179,7 @@ class MySqlDb implements IDb
     function updateAuthor($author)
     {
         $dbAuthor = Author::findByPk($author[Author::getModelFileds()['id']]);
-        if(isset($dbAuthor) && !empty($book)) {
+        if(isset($dbAuthor) && !empty($dbAuthor)) {
             foreach ($author as $key => $value) {
                 $dbAuthor->$key = $value;
             }
@@ -224,7 +224,7 @@ class MySqlDb implements IDb
     function updateBook($book)
     {
         $dbBook = Book::findByPk($book[Book::getModelFileds()['id']]);
-        if(isset($dbBook) && !empty($book)) {
+        if(isset($dbBook) && !empty($dbBook)) {
             foreach ($book as $key => $value) {
                 $dbBook->$key = $value;
             }

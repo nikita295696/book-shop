@@ -8,7 +8,7 @@
                 <div class="modal-body">
                     <form id="category-form">
                         <div class="form-group"><label class="form-control-label" for="recipient-name">Name:</label><input class="form-control" id="form-cat-name" type="text" name="name" /></div><input id="form-cat-id" type="hidden" name="id" /><input id="form-cat-parent" type="hidden"
-                                                                                                                                                                                                                                                            name="idParentCategory" /><input id="form-type" type="hidden" /></form>
+                                                                                                                                                                                                                                                            name="id_parent_category" /><input id="form-type" type="hidden" /></form>
                 </div>
                 <div class="modal-footer"><button class="btn btn-secondary" id="btnClose" type="button" data-dismiss="modal">Close</button><button class="btn btn-primary" id="btnSend" type="button">Send</button></div>
             </div>

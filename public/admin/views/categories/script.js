@@ -32,7 +32,7 @@ function generateTable(json, dataId, dataName) {
             var tr = $("<tr>");
             //data-id=category.id, data-name=category.name, data-id-parent=category.idParentCategory
             console.log(category);
-            tr.attr("data-id", category.id).attr("data-name", category.name).attr("data-id-parent", category["id_parent_category"]);
+            tr.attr("data-id", category.id).attr("data-name", category.name).attr("data-id-parent", category["idParentCategory"]);
             tr.append($("<td>").text(id));
             tr.append($("<td>").text(category.name));
             var tdOptions = $("<td>");

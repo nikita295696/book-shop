@@ -50,4 +50,26 @@ class AdminController extends BaseController
         unset($_SESSION['user']);
         \Application::redirect("admin/login");
     }
+
+    public function authors(){
+        $authors = DbRepository::getDb()->findAuthors();
+        $resAuthors = [];
+        if(!empty($authors)){
+            foreach ($authors as $author) {
+                $resAuthors[] = $author->toArray();
+            }
+        }
+        $this->render("authors", ['authors'=>$resAuthors]);
+    }
+
+    public function publishers(){
+        $publishers = DbRepository::getDb()->findPublishers();
+        $resPublisher = [];
+        if(!empty($publishers)){
+            foreach ($publishers as $publisher) {
+                $resPublisher[] = $publisher->toArray();
+            }
+        }
+        $this->render("publishers", ['publishers'=>$resPublisher]);
+    }
 }
