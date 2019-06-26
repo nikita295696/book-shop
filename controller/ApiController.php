@@ -9,6 +9,7 @@
 namespace controller;
 
 
+use config\DbConfig;
 use models\db\DbRepository;
 use mvc\controller\BaseController;
 
@@ -113,5 +114,57 @@ class ApiController extends \mvc\controller\ApiController
                 break;
         }
         $this->json($result);
+    }
+
+    public function bookschilds($id){
+        $result = [];
+        $result['categories'] = DbRepository::getDb()->findChildsByParentId($id);
+        $result['books'] = DbRepository::getDb()->findBooksByCategoryId($id);
+        $this->json($result);
+    }
+
+    public function books($id){
+        $result = [];
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case "POST":
+                if(isset($_REQUEST['method'])) {
+                    $result = DbRepository::getDb()->updateBook($_REQUEST);
+                }else {
+                    if(isset($_REQUEST['id']) && isset($_REQUEST['idAuthor'])){
+                        $bookToAuthor = ["idBook"=>$_REQUEST['id'], "idAuthor"=>$_REQUEST['idAuthor']];
+                        $res = DbRepository::getDb()->addAuthorToBook($bookToAuthor);
+                        $result = $res > 0 ? true : false;
+                    }
+                    else{
+                        $res = DbRepository::getDb()->addBook($_REQUEST);
+                        $result = $res > 0 ? true : false;
+                    }
+                }
+                break;
+            case "DELETE":
+                break;
+            default:
+                if (!empty($id)) {
+                    $result = DbRepository::getDb()->findAuthorById($id);
+                }
+                break;
+        }
+        $this->json($result);
+    }
+
+    public function bookphoto($id){
+
+    }
+
+    private function saveFile($files){
+        $uploaddir = DbConfig::$config['file']['upload_dir'];
+        $uploadfile = $uploaddir . basename($files['file']['name']);
+
+        echo '<pre>';
+        if (move_uploaded_file($files['file']['tmp_name'], $uploadfile)) {
+            return "";
+        } else {
+            return null;
+        }
     }
 }

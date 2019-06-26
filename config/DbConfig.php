@@ -8,6 +8,9 @@ class DbConfig{
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
-        "table_prefix" => ""
+        "table_prefix" => "",
+        'file' => [
+            'upload_dir' => "/book-shop/public/files/"
+        ]
     ];
 }

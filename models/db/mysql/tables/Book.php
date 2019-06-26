@@ -23,7 +23,7 @@ class Book extends ActiveRecord implements IMigration
     {
         return [
             'id' => "id",
-            'name' => "title",
+            'name' => "name",
             'yearPublisher' => "yearPublisher",
             'idPublisher' => "id_publisher",
             'idCategory' => "id_category"
