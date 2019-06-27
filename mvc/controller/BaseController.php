@@ -2,25 +2,10 @@
 
 namespace mvc\controller;
 
-class BaseController
+class BaseController extends Controller
 {
-    private $controllerName;
     private $directoryViews = 'views';
     protected $layoutFile = "layouts\\main.php";
-    protected $models = [];
-
-    /**
-     * BaseController constructor.
-     * @param $controllerName
-     */
-    public function __construct($controllerName = "Default", $moduleName = "")
-    {
-        if($moduleName != "") {
-            $this->directoryViews = "$moduleName\\" . $this->directoryViews;
-            $this->layoutFile = "$moduleName\\" . $this->layoutFile;
-        }
-        $this->controllerName = $controllerName;
-    }
 
     public function render($action, $models = null, $isLayout = true){
         $view = "";

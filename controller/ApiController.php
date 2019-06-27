@@ -11,6 +11,7 @@ namespace controller;
 
 use config\DbConfig;
 use models\db\DbRepository;
+use models\db\mysql\tables\Book;
 use mvc\controller\BaseController;
 
 class ApiController extends \mvc\controller\ApiController
@@ -26,6 +27,9 @@ class ApiController extends \mvc\controller\ApiController
                     }
                     $result = DbRepository::getDb()->updateCategory($_REQUEST);
                 }else {
+                    if($_REQUEST['id_parent_category'] == 'null'){
+                        $_REQUEST['id_parent_category'] = "";
+                    }
                     $res = DbRepository::getDb()->addCategory($_REQUEST);
                     $result = $res > 0 ? true : false;
                 }
@@ -118,7 +122,13 @@ class ApiController extends \mvc\controller\ApiController
 
     public function bookschilds($id){
         $result = [];
-        $result['categories'] = DbRepository::getDb()->findChildsByParentId($id);
+        $categories = DbRepository::getDb()->findChildsByParentId($id);
+        $result['categories'] = [];
+        if(!empty($categories)){
+            foreach ($categories as $child){
+                $result['categories'][] = $child->toArray();
+            }
+        }
         $result['books'] = DbRepository::getDb()->findBooksByCategoryId($id);
         $this->json($result);
     }
@@ -127,6 +137,9 @@ class ApiController extends \mvc\controller\ApiController
         $result = [];
         switch ($_SERVER['REQUEST_METHOD']) {
             case "POST":
+                $_REQUEST[Book::getModelFileds()['idPublisher']] = (int)$_REQUEST['idPublisher'];
+                $_REQUEST[Book::getModelFileds()['idCategory']] = (int)$_REQUEST['idCategory'];
+                $_REQUEST[Book::getModelFileds()['name']] = $_REQUEST['name'];
                 if(isset($_REQUEST['method'])) {
                     $result = DbRepository::getDb()->updateBook($_REQUEST);
                 }else {
@@ -153,16 +166,19 @@ class ApiController extends \mvc\controller\ApiController
     }
 
     public function bookphoto($id){
-
+        $path = $this->saveFile($_FILES['file']);
+        $bookPhoto = ['idBook' => $id, "path" => $path];
+        $result = DbRepository::getDb()->addPhotoToBook($bookPhoto) > 0 ? true : false;
+        $this->json($result);
     }
 
-    private function saveFile($files){
+    private function saveFile($file){
         $uploaddir = DbConfig::$config['file']['upload_dir'];
-        $uploadfile = $uploaddir . basename($files['file']['name']);
+        $uploadfile = $uploaddir . basename($file['name']);
 
         echo '<pre>';
-        if (move_uploaded_file($files['file']['tmp_name'], $uploadfile)) {
-            return "";
+        if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
+            return $uploadfile;
         } else {
             return null;
         }

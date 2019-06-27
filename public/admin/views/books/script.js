@@ -2,7 +2,7 @@ const typeFormCreate = "create";
 const typeFormUpdate = "update";
 
 function updateTable(thisLi, dataId, dataName) {
-    var url = `${URL_API}/books/childs`;
+    var url = `${URL_API}/bookschilds`;
 
     if (dataId != "null") {
         url += "/" + dataId;
@@ -52,16 +52,16 @@ function generateTable(json, dataId, dataName) {
             var tr = $("<tr>");
             //data-id=category.id, data-name=category.name, data-id-parent=category.idParentCategory
             console.log(book);
-            tr.attr("data-id", book.id).attr("data-title", book.title).attr("data-year", book.yearPublisher).attr("data-id-cat", book.id_category).attr("data-id-pub", book.id_publisher);
+            tr.attr("data-id", book.id).attr("data-title", book.name).attr("data-year", book.yearPublisher).attr("data-id-cat", book.id_category).attr("data-id-pub", book.id_publisher);
             tr.append($("<td>").text(id));
-            tr.append($("<td>").text(book.title));
+            tr.append($("<td>").text(book.name));
             tr.append($("<td>").text(book.yearPublisher));
             tr.append($("<td>").text(book.publisherName));
             tr.append($("<td>").text(book.categoryName));
             var tdOptions = $("<td>");
             tdOptions.append($("<a>").attr("href", `#`).attr("data-id", id).attr("data-title", book.title).addClass("update").text("Update"));
             tdOptions.append($("<span>").text(" | "));
-            tdOptions.append($("<a>").attr("href", `/admin/books/view/${id}`).attr("data-title", book.title).text("View"));
+            tdOptions.append($("<a>").attr("href", `${BASE_URL}/admin/booksview/${id}`).attr("data-title", book.title).text("View"));
             tr.append(tdOptions);
             $("#book-body").append(tr);
         }
@@ -90,7 +90,7 @@ function addEventHandlers() {
         const dataName = $(this).attr("data-name");
         $.ajax({
             method: "GET",
-            url: `${URL_API}/books/childs/${dataId}`,
+            url: `${URL_API}/bookschilds/${dataId}`,
             success: function (json) {
                 generateTable(json, dataId, dataName);
             },
@@ -142,13 +142,15 @@ $("#btnSend").click(function (e) {
     const type = $("#form-type").val();
     var url = `${URL_API}/books/`;
     var method = "";
+    var additionalParams = "";
     switch (type) {
         case typeFormCreate:
             method = "POST";
             break;
         case typeFormUpdate:
             url += `/${$("#form-book-id").val()}`; 
-            method = "PUT";
+            method = "POST";
+            additionalParams += "&method=put";
             break;
     }
     var idCat = $("#form-book-id-cat").val();
@@ -160,7 +162,7 @@ $("#btnSend").click(function (e) {
         $.ajax({
             url: url,
             method: method,
-            data: $("#category-form").serialize(),
+            data: $("#category-form").serialize() + additionalParams,
             success: function (json) {
                 console.log(json);
                 if (json) {

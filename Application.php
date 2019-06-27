@@ -19,12 +19,8 @@ class Application
     private $actionName = 'index';
     private $id = null;
 
-    private $moduleName;
-
-    function __construct($moduleName = "")
+    function __construct()
     {
-        $this->moduleName = $moduleName;
-
         if(isset($_GET['controller'])) {
             $this->controllerName = $_GET['controller'];
             $this->controller = $_GET['controller'];
@@ -72,12 +68,23 @@ class Application
 
         $this->controllerName = "controller\\$this->controllerName";
         if(class_exists($this->controllerName)) {
-            if($this->moduleName != "") {
-                $this->controllerName = $this->moduleName != "" ? $this->moduleName . '\\' : "" . $this->controllerName;
-            }
-            $controller = new $this->controllerName($this->controller, $this->moduleName);
+
+            $controller = new $this->controllerName($this->controller);
             if (in_array($this->actionName, get_class_methods($this->controllerName))) {
-                $controller->{$this->actionName}($this->id);
+                $confirm = true;
+                $authorizeActions = $controller->authorizedActions();
+                if(key_exists("success", $authorizeActions))
+                {
+                    foreach ($authorizeActions['success'] as $value){
+                        $confirm = strtolower($value) == $this->actionName || $controller->successAuthorize();
+                    }
+                }
+                if($confirm) {
+                    $controller->{$this->actionName}($this->id);
+                }
+                else{
+                    Application::redirect($this->controller."/".$authorizeActions['loginPage']);
+                }
             }
         }
     }

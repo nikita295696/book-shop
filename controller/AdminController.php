@@ -18,6 +18,17 @@ class AdminController extends BaseController
         $this->models["user"] = isset($_SESSION['user']) && !empty($_SESSION['user']) ? $_SESSION["user"] : [];
     }
 
+    public function authorizedActions()
+    {
+        $base = parent::authorizedActions();
+        return array_merge($base, ['success'=>["login"]]);
+    }
+
+    public function successAuthorize()
+    {
+        return isset($_SESSION['user']) && !empty($_SESSION['user']);
+    }
+
     public function login(){
 
         if(!empty($_REQUEST) && isset($_REQUEST['username']) && isset($_REQUEST["password"]) ){
@@ -31,14 +42,7 @@ class AdminController extends BaseController
     }
 
     public function index(){
-
-        if(!isset($_SESSION['user']) || empty($_SESSION['user'])) {
-            \Application::redirect("admin/login");
-        }
-        else{
-            $this->render('index');
-        }
-
+        $this->render('index');
     }
 
     public function categories(){
@@ -71,5 +75,40 @@ class AdminController extends BaseController
             }
         }
         $this->render("publishers", ['publishers'=>$resPublisher]);
+    }
+
+    public function books(){
+        $categories = DbRepository::getDb()->findCategories();
+
+        $dbPublishers = DbRepository::getDb()->findPublishers();
+        $publishers = [];
+        if(!empty($dbPublishers)){
+            foreach ($dbPublishers as $publisher){
+                $publishers[] = $publisher->toArray();
+            }
+        }
+        $this->render("books", ['categories'=>$categories, 'publishers' => $publishers]);
+    }
+
+    public function booksview($id){
+        $book = DbRepository::getDb()->findBookById($id);
+
+        $categories = DbRepository::getDb()->findCategories();
+        $dbPublishers = DbRepository::getDb()->findPublishers();
+        $publishers = $this->toArrayActiveRecord($dbPublishers);
+
+        $dbAuthors = DbRepository::getDb()->findAuthors();
+        $authors = $this->toArrayActiveRecord($dbAuthors);
+        $this->render("booksView", ['categories'=>$categories, 'publishers' => $publishers, 'authors'=>$authors, 'book' => $book]);
+    }
+
+    private function toArrayActiveRecord($activeRecord){
+        $mss = [];
+        if(!empty($activeRecord)){
+            foreach ($activeRecord as $item){
+                $mss[] = $item->toArray();
+            }
+        }
+        return $mss;
     }
 }

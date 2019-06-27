@@ -32,7 +32,7 @@
                         <div class="product-body">
                             <h3>Year publisher: <?=$book['yearPublisher']?></h3>
                             <h2 class="product-name"><a
-                                        href="<?= Application::getUrl("products", "view", $book['id']) ?>"><?= $book['title'] ?></a>
+                                        href="<?= Application::getUrl("products", "view", $book['id']) ?>"><?= $book['name'] ?></a>
                             </h2>
                         </div>
                     </div>

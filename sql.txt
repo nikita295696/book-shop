@@ -1,5 +1,5 @@
 drop DATABASE if EXISTS book_shop_bykova_db;
-CREATE DATABASE book_shop_bykova_db;
+CREATE DATABASE book_shop_bykova_db CHARACTER SET utf8;
 
 use book_shop_bykova_db;
 
