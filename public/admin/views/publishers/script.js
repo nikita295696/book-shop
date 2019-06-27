@@ -58,6 +58,29 @@ function addEventHandlers() {
         $("#openModalDialogBtn").click();
     });
 
+    $("a.delete").click(function (e) {
+        const tr = $(this).parent().parent();
+
+        var publisherId = tr.attr("data-id");
+        var url = `${URL_API}/publishers/${publisherId}`;
+
+        $.ajax({
+            url: url,
+            method: "DELETE",
+            success: function(json){
+                console.log(json);
+                if(json){
+                    updateTable();
+                }else{
+                    console.log("failed");
+                }
+            },
+            error: function(err){
+
+            }
+        });
+    });
+
     $("a#create").click(function (e) {
         $("#form-pub-id").val("");
         $("#form-pub-name").val("");

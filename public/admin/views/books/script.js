@@ -62,6 +62,8 @@ function generateTable(json, dataId, dataName) {
             tdOptions.append($("<a>").attr("href", `#`).attr("data-id", id).attr("data-title", book.title).addClass("update").text("Update"));
             tdOptions.append($("<span>").text(" | "));
             tdOptions.append($("<a>").attr("href", `${BASE_URL}/admin/booksview/${id}`).attr("data-title", book.title).text("View"));
+            tdOptions.append($("<span>").text(" | "));
+            tdOptions.append($("<a>").attr("href", `#`).attr("data-id", id).addClass("delete").text("Delete"));
             tr.append(tdOptions);
             $("#book-body").append(tr);
         }
@@ -105,6 +107,33 @@ function addEventHandlers() {
         const dataId = $(this).parent().attr("data-id");
         const dataName = $(this).parent().attr("data-name");
         updateTable(thisLi, dataId, dataName);
+    });
+
+    $("a.delete").click(function (e) {
+        const tr = $(this).parent().parent();
+
+        var bookId = tr.attr("data-id");
+        var url = `${URL_API}/books/${bookId}`;
+
+        $.ajax({
+            url: url,
+            method: "DELETE",
+            success: function(json){
+                console.log(json);
+                if(json){
+                    var thisLi = $("li.breadcrumb-item.active:last");
+                    const dataId = thisLi.attr("data-id");
+                    const dataName = thisLi.attr("data-name");
+                    updateTable(thisLi, dataId, dataName);
+                    //$(".close").click();
+                }else{
+                    console.log("failed");
+                }
+            },
+            error: function(err){
+
+            }
+        });
     });
 
     $("a.update").click(function (e) {

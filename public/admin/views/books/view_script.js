@@ -8,7 +8,7 @@ function updateAuthors(){
         method: "GET",
         url: `${URL_API}/books/${bookId}`,
         success: function (json) {
-            generateTableAuthors(json["authors"]);
+            generateTableAuthors(json);
         },
         error: function (err) {
 
@@ -21,7 +21,7 @@ function updatePhotos(){
         method: "GET",
         url: `${URL_API}/books/${bookId}`,
         success: function (json) {
-            generateTablePhotos(json["photos"]);
+            generateTablePhotos(json);
         },
         error: function (err) {
 
@@ -32,14 +32,18 @@ function updatePhotos(){
 function generateTableAuthors(json) {
     var bodyTable = "#author-body";
     $(bodyTable).html("");
-    if (json && json.length > 0) {
-        for (var author of json) {
+    if (json['authors'] && json["authors"].length > 0) {
+        for (var author of json["authors"]) {
             var id = author.id;
             var tr = $("<tr>");
             console.log(author);
-            tr.attr("data-id", author.id).attr("data-name", author.name);
+            tr.attr("data-id", json['data'].id).attr("data-name", author.name).attr("data-author-id", author.id);
             tr.append($("<td>").text(id));
             tr.append($("<td>").text(author.name));
+            //tr.append($("<td>").append());
+            var tdOptions = $("<td>");
+            tdOptions.append($("<a>").attr("href", "#").attr("data-id", json.data.id).attr("data-name", author.name).attr("data-author-id", author.id).addClass('deleteAuthor').text("Delete"));
+            tr.append(tdOptions);
             $(bodyTable).append(tr);
         }
     } else {
@@ -51,14 +55,17 @@ function generateTableAuthors(json) {
 function generateTablePhotos(json) {
     var bodyTable = "#photo-body";
     $(bodyTable).html("");
-    if (json && json.length > 0) {
-        for (var photo of json) {
+    if (json['photos'] && json['photos'].length > 0) {
+        for (var photo of json['photos']) {
             var id = photo.id;
             var tr = $("<tr>");
             console.log(photo);
-            tr.attr("data-path", photo.name);
+            tr.attr("data-path", photo.name).attr("data-id", json.data.id);
             tr.append($("<td>").append($("<img>").attr("src", photo.path)));
             tr.append($("<td>").text(photo.path));
+            var tdOptions = $("<td>");
+            tdOptions.append($("<a>").attr("href", "#").attr("data-id", json.data.id).addClass('deletePhoto').text("Delete"));
+            tr.append(tdOptions);
             $(bodyTable).append(tr);
         }
     } else {
@@ -160,34 +167,58 @@ function addEventHandlers() {
         $("#btnSend").click();
     });
 
-    // $("a.update").click(function (e) {
-    //     const tr = $(this).parent().parent();
-    //     $("#form-book-id").val(tr.attr("data-id"));
-    //     $("#form-book-title").val(tr.attr("data-title"));
-    //     $("#form-book-id-cat").val(tr.attr("data-id-cat"));
-    //     $("#form-book-id-pub").val(tr.attr("data-id-pub"));
-    //     $("#form-type").val(typeFormUpdate);
+    $("a.deleteAuthor").click(function (e) {
+        const tr = $(this).parent().parent();
 
-    //     $("#formCategoryLabel").text("Update. Book " + tr.attr("data-title"));
-    //     $("#openModalDialogBtn").click();
-    // });
+        var bookId = tr.attr("data-id");
+        var authorId = tr.attr("data-author-id");
+        var url = `${URL_API}/books/${bookId}/${authorId}`;
 
-    /*$("a#category").click(function (e) {
-        $("#form-book-id").val("");
-        $("#form-book-title").val("");
-        $("#form-book-id-cat").val($("#category").attr("data-id"));
-        //$("#form-book-id-pub").val();
-        $("#form-type").val(typeFormCreate);
+        $.ajax({
+            url: url,
+            method: "DELETE",
+            success: function(json){
+                console.log(json);
+                if(json){
+                    updateAuthors();
+                }else{
+                    console.log("failed");
+                }
+            },
+            error: function(err){
 
-        $("#formCategoryLabel").text("Create Book");
-        $("#openModalDialogBtn").click();
-    });*/
+            }
+        });
+    });
+
+    $("a.deletePhoto").click(function (e) {
+        const tr = $(this).parent().parent();
+
+        var bookId = tr.attr("data-id");
+        var path = tr.attr("data-path");
+        var url = `${URL_API}/bookphoto/${bookId}`;
+
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: `path=${path}&method=delete`,
+            success: function(json){
+                console.log(json);
+                if(json){
+                    updatePhotos();
+                }else{
+                    console.log("failed");
+                }
+            },
+            error: function(err){
+
+            }
+        });
+    });
 
 }
 
 addEventHandlers();
-
-
 
 $("#btnSend").click(function (e) {
     const type = $("#form-type").val();

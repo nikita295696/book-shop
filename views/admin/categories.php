@@ -36,7 +36,10 @@
                     <tr data-id="<?=$category['id']?>" data-name="<?=$category['name']?>" data-id-parent="<?=$category['idParentCategory']?>">
                         <td><?=$category['id']?></td>
                         <td><?=$category['name']?></td>
-                        <td><a class="childs" href="#" data-id="<?=$category['id']?>" data-name="<?=$category['name']?>">Childs</a></td>
+                        <td>
+                            <a class="childs" href="#" data-id="<?=$category['id']?>" data-name="<?=$category['name']?>">Childs</a> |
+                            <a class="delete" href="#" data-id="<?=$category['id']?>">Delete</a>
+                        </td>
                     </tr>
                 <?php }
             }else{ ?>

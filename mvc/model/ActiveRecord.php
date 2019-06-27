@@ -174,13 +174,27 @@ class ActiveRecord
 
             try {
                 $db = static::getConnection();
-
                 $db->query($query);
 
             } catch (\PDOException $ex) {
                 echo "Error: " . $ex->getMessage() . "\n";
             }
         }
+    }
+
+    public static function deleteBy($condition, $params){
+        $query = "DELETE FROM " . static::tableName() . " WHERE " . $condition;
+        try{
+            $db = self::getConnection();
+
+            $stmt = $db->prepare($query);
+            $stmt->execute($params);
+
+        }catch (\Exception $ex){
+            echo $ex;
+            return null;
+        }
+
     }
 
     private static function invokeDb($query, $condition,$params){

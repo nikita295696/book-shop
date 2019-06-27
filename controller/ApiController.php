@@ -11,9 +11,12 @@ namespace controller;
 
 use config\DbConfig;
 use models\db\DbRepository;
+use models\db\mysql\tables\Author;
 use models\db\mysql\tables\Book;
 use models\db\mysql\tables\BooksAuthors;
 use models\db\mysql\tables\BooksPhotos;
+use models\db\mysql\tables\Category;
+use models\db\mysql\tables\Publisher;
 use mvc\controller\BaseController;
 
 class ApiController extends \mvc\controller\ApiController
@@ -37,6 +40,15 @@ class ApiController extends \mvc\controller\ApiController
                 }
                 break;
             case "DELETE":
+                $category = Category::findByPk($id);
+                if(!empty($category)) {
+                    $categoryFileds = Category::getModelFileds();
+                    Category::deleteBy($categoryFileds['id'] . " = :id",[':id' =>(int)$category->id]);
+                    $result = true;
+                }else{
+                    $result = false;
+                }
+
 
                 break;
             default:
@@ -74,6 +86,14 @@ class ApiController extends \mvc\controller\ApiController
                 }
                 break;
             case "DELETE":
+                $author = Author::findByPk($id);
+                if(!empty($author)) {
+                    $authorFields = Author::getModelFileds();
+                    Author::deleteBy($authorFields['id'] . " = :id",[':id' =>(int)$author->id]);
+                    $result = true;
+                }else{
+                    $result = false;
+                }
                 break;
             default:
                 if (empty($id)) {
@@ -105,6 +125,14 @@ class ApiController extends \mvc\controller\ApiController
                 }
                 break;
             case "DELETE":
+                $publisher = Publisher::findByPk($id);
+                if(!empty($publisher)) {
+                    $publisherFields = Publisher::getModelFileds();
+                    Publisher::deleteBy($publisherFields['id'] . " = :id",[':id' =>(int)$publisher->id]);
+                    $result = true;
+                }else{
+                    $result = false;
+                }
                 break;
             default:
                 if (empty($id)) {
@@ -149,8 +177,9 @@ class ApiController extends \mvc\controller\ApiController
                 }else {
                     if(isset($_REQUEST['id']) && isset($_REQUEST['idAuthor'])){
                         $find = BooksAuthors::find(BooksAuthors::getModelFileds()['idBook'] . " = :idBook and " . BooksAuthors::getModelFileds()['idAuthor'] . " = :idAuthor", [":idBook" => (int)$_REQUEST['id'], ":idAuthor"=>$_REQUEST['idAuthor']]);
+                        $bookToAuthor = [BooksAuthors::getModelFileds()['idBook'] => (int)$_REQUEST['id'], BooksAuthors::getModelFileds()['idAuthor'] => (int)$_REQUEST['idAuthor']];
                         if(empty($find)) {
-                            $bookToAuthor = [BooksAuthors::getModelFileds()['idBook'] => (int)$_REQUEST['id'], BooksAuthors::getModelFileds()['idAuthor'] => (int)$_REQUEST['idAuthor']];
+
                             DbRepository::getDb()->addAuthorToBook($bookToAuthor);
                             $result = 1;
                         }
@@ -165,6 +194,23 @@ class ApiController extends \mvc\controller\ApiController
                 }
                 break;
             case "DELETE":
+                if(isset($_REQUEST['id']) && isset($_REQUEST['idAuthor'])){
+
+                    $bookAuthorsFields = BooksAuthors::getModelFileds();
+                    BooksAuthors::deleteBy(
+                        $bookAuthorsFields['idBook'] . " = :idBook and " . $bookAuthorsFields['idAuthor'] . " = :idAuthor",
+                        [':idBook' => (int)$_REQUEST['id'], ':idAuthor'=>(int)$_REQUEST['idAuthor']]);
+                    $result = true;
+                }else {
+                    $book = Book::findByPk($id);
+                    if (!empty($book)) {
+                        $bookFields = Book::getModelFileds();
+                        Book::deleteBy($bookFields['id'] . " = :id", [':id' => (int)$book->id]);
+                        $result = true;
+                    } else {
+                        $result = false;
+                    }
+                }
                 break;
             default:
                 if (!empty($id)) {
@@ -176,14 +222,24 @@ class ApiController extends \mvc\controller\ApiController
     }
 
     public function bookphoto($id){
-        if(!empty(DbRepository::getDb()->findBookById($id))) {
-            $path = $this->saveFile($_FILES['file'], $id);
-            $bookPhoto = [BooksPhotos::getModelFileds()['idBook'] => (int)$id, BooksPhotos::getModelFileds()['path'] => $path];
-            DbRepository::getDb()->addPhotoToBook($bookPhoto);
-            $result = true;
-        }
-        else {
-            $result = false;
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case "POST":
+                if(isset($_REQUEST["method"]) && $_REQUEST['method'] == 'delete'){
+                    $booksPhotos = BooksPhotos::getModelFileds();
+                    BooksPhotos::deleteBy($booksPhotos['idBook'] . " = :idBook and " . $booksPhotos['path'] . " = :path", [':idBook'=>$id, ":path"=>$_REQUEST['path']]);
+                    $result = true;
+                }
+                else {
+                    if (!empty(DbRepository::getDb()->findBookById($id))) {
+                        $path = $this->saveFile($_FILES['file'], $id);
+                        $bookPhoto = [BooksPhotos::getModelFileds()['idBook'] => (int)$id, BooksPhotos::getModelFileds()['path'] => $path];
+                        DbRepository::getDb()->addPhotoToBook($bookPhoto);
+                        $result = true;
+                    } else {
+                        $result = false;
+                    }
+                }
+                break;
         }
         $this->json($result);
     }

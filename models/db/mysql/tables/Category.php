@@ -50,4 +50,6 @@ class Category extends ActiveRecord implements IMigration
         }
         return $obj;
     }
+
+
 }

@@ -58,14 +58,18 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th></th>
             </tr>
             </thead>
             <tbody id="author-body">
             <?php if(is_array($book['authors']) && count($book['authors']) > 0) {
                 foreach ($book['authors'] as $author) { ?>
-                    <tr data-id="<?=$author['id']?>" data-name="<?=$author['name']?>">
+                    <tr data-id="<?=$book['data']['id']?>" data-name="<?=$author['name']?>" data-author-id="<?=$author['id']?>">
                         <td><?=$author['id']?></td>
                         <td><?=$author['name']?></td>
+                        <td>
+                            <a class="deleteAuthor" href="#" data-id="<?=$book['data']['id']?>" data-author-id="<?=$author['id']?>">Delete</a>
+                        </td>
                     </tr>
                 <?php } ?>
 
@@ -96,14 +100,16 @@
             <tr>
                 <th>Image</th>
                 <th>Name</th>
+                <th></th>
             </tr>
             </thead>
             <tbody id="photo-body">
             <?php if(is_array($book['photos']) && count($book['photos']) > 0) {
                 foreach ($book['photos'] as $photo) { ?>
-                    <tr data-path="<?=$photo['path']?>">
+                    <tr data-id="<?=$book['data']['id']?>" data-path="<?=$photo['path']?>">
                         <td><img src="<?=$photo['path']?>"></td>
                         <td><?=$photo['path']?></td>
+                        <td><a class="deletePhoto" href="#" data-id="<?=$book['data']['id']?>">Delete</a></td>
                     </tr>
                 <?php } ?>
 

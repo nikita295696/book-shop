@@ -14,7 +14,7 @@ CREATE TABLE categories(
 	id int PRIMARY KEY AUTO_INCREMENT,
     name nvarchar(50) not null,
     id_parent_category int null,
-    FOREIGN KEY(id_parent_category) REFERENCES categories(id)
+    FOREIGN KEY(id_parent_category) REFERENCES categories(id) ON DELETE CASCADE
 );
 
 CREATE TABLE books(
@@ -23,15 +23,15 @@ CREATE TABLE books(
     yearPublisher int not null,
     id_publisher int not null,
     id_category int not null,
-    FOREIGN KEY(id_publisher) REFERENCES publishers(id),
-    FOREIGN KEY(id_category) REFERENCES categories(id)
+    FOREIGN KEY(id_publisher) REFERENCES publishers(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_category) REFERENCES categories(id) ON DELETE CASCADE
 );
 
 
 CREATE TABLE books_photos(
 	id_book int not null,
     path varchar(50) not null,
-    FOREIGN KEY(id_book) REFERENCES books(id)
+    FOREIGN KEY(id_book) REFERENCES books(id) ON DELETE CASCADE
 );
 
 CREATE TABLE `authors`(
@@ -42,8 +42,8 @@ CREATE TABLE `authors`(
 CREATE TABLE books_authors(
 	id_book int not null,
     id_author int not null,
-    FOREIGN KEY(id_book) REFERENCES books(id),
-    FOREIGN KEY(id_author) REFERENCES `authors`(id)
+    FOREIGN KEY(id_book) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_author) REFERENCES authors(id) ON DELETE CASCADE
 );
 
 CREATE TABLE users(
