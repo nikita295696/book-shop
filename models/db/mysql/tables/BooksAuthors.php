@@ -5,18 +5,13 @@ namespace models\db\mysql\tables;
 
 
 use mvc\model\ActiveRecord;
-use mvc\model\IMigration;
+use mvc\model\IModelFields;
 
-class BooksAuthors extends ActiveRecord implements IMigration
+class BooksAuthors extends ActiveRecord implements IModelFields
 {
     public static function tableName()
     {
         return "books_authors";
-    }
-
-    public static function createTable()
-    {
-        // TODO: Implement createTable() method.
     }
 
     public static function getModelFileds()

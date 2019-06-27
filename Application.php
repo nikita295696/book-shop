@@ -77,6 +77,8 @@ class Application
                 {
                     foreach ($authorizeActions['success'] as $value){
                         $confirm = strtolower($value) == $this->actionName || $controller->successAuthorize();
+                        if($confirm)
+                            break;
                     }
                 }
                 if($confirm) {

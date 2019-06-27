@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: ПК
- * Date: 23.06.2019
- * Time: 0:16
+ * Date: 27.06.2019
+ * Time: 22:06
  */
 
 namespace mvc\model;
@@ -11,7 +11,8 @@ namespace mvc\model;
 
 interface IMigration
 {
-    public static function createTable();
-    public static function getModelFileds();
-    public function toArray();
+    public function up();
+    public function down();
+    public function executeQuery($query);
+
 }

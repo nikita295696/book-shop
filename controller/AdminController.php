@@ -4,6 +4,7 @@
 namespace controller;
 
 
+use config\DbConfig;
 use models\db\DbRepository;
 use models\db\mysql\tables\User;
 use mvc\controller\BaseController;
@@ -21,7 +22,7 @@ class AdminController extends BaseController
     public function authorizedActions()
     {
         $base = parent::authorizedActions();
-        return array_merge($base, ['success'=>["login"]]);
+        return array_merge($base, ['success'=>["login", 'migrationsUp', 'migrationsDown']]);
     }
 
     public function successAuthorize()
@@ -113,5 +114,25 @@ class AdminController extends BaseController
             }
         }
         return $mss;
+    }
+
+    public function migrationsup(){
+        foreach (DbConfig::$config['migrationsUp'] as $migrationName) {
+            $migrationPath = "migrations\\$migrationName";
+            if(class_exists($migrationPath)) {
+                $migration = new $migrationPath();
+                $migration->up();
+            }
+        }
+    }
+
+    public function migrationsdown(){
+        foreach (DbConfig::$config['migrationsDown'] as $migrationName) {
+            $migrationPath = "migrations\\$migrationName";
+            if(class_exists($migrationPath)) {
+                $migration = new $migrationPath();
+                $migration->down();
+            }
+        }
     }
 }
