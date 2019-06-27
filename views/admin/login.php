@@ -38,6 +38,14 @@
                                 </div>
                             </div>
                             <div class="form-group"><button type="submit" class="btn btn-primary submit-btn btn-block">Login</button></div>
+                            <?php if(isset($error)) { ?>
+                                <div class="errors">
+                                    <p><?=$error?></p>
+                                </div>
+                            <?php } ?>
+                            <div class="">
+
+                            </div>
                         </form>
                     </div>
                     <ul class="auth-footer">

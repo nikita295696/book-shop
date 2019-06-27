@@ -10,7 +10,7 @@ class DbConfig{
         'charset' => 'utf8',
         "table_prefix" => "",
         'file' => [
-            'upload_dir' => "/book-shop/public/files/"
+            'upload_dir' => "/book-shop/public/images/"
         ]
     ];
 }

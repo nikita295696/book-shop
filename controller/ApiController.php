@@ -12,6 +12,8 @@ namespace controller;
 use config\DbConfig;
 use models\db\DbRepository;
 use models\db\mysql\tables\Book;
+use models\db\mysql\tables\BooksAuthors;
+use models\db\mysql\tables\BooksPhotos;
 use mvc\controller\BaseController;
 
 class ApiController extends \mvc\controller\ApiController
@@ -35,6 +37,7 @@ class ApiController extends \mvc\controller\ApiController
                 }
                 break;
             case "DELETE":
+
                 break;
             default:
                 if (empty($id)) {
@@ -140,13 +143,20 @@ class ApiController extends \mvc\controller\ApiController
                 $_REQUEST[Book::getModelFileds()['idPublisher']] = (int)$_REQUEST['idPublisher'];
                 $_REQUEST[Book::getModelFileds()['idCategory']] = (int)$_REQUEST['idCategory'];
                 $_REQUEST[Book::getModelFileds()['name']] = $_REQUEST['name'];
+
                 if(isset($_REQUEST['method'])) {
                     $result = DbRepository::getDb()->updateBook($_REQUEST);
                 }else {
                     if(isset($_REQUEST['id']) && isset($_REQUEST['idAuthor'])){
-                        $bookToAuthor = ["idBook"=>$_REQUEST['id'], "idAuthor"=>$_REQUEST['idAuthor']];
-                        $res = DbRepository::getDb()->addAuthorToBook($bookToAuthor);
-                        $result = $res > 0 ? true : false;
+                        $find = BooksAuthors::find(BooksAuthors::getModelFileds()['idBook'] . " = :idBook and " . BooksAuthors::getModelFileds()['idAuthor'] . " = :idAuthor", [":idBook" => (int)$_REQUEST['id'], ":idAuthor"=>$_REQUEST['idAuthor']]);
+                        if(empty($find)) {
+                            $bookToAuthor = [BooksAuthors::getModelFileds()['idBook'] => (int)$_REQUEST['id'], BooksAuthors::getModelFileds()['idAuthor'] => (int)$_REQUEST['idAuthor']];
+                            DbRepository::getDb()->addAuthorToBook($bookToAuthor);
+                            $result = 1;
+                        }
+                        else{
+                            $result = 0;
+                        }
                     }
                     else{
                         $res = DbRepository::getDb()->addBook($_REQUEST);
@@ -158,7 +168,7 @@ class ApiController extends \mvc\controller\ApiController
                 break;
             default:
                 if (!empty($id)) {
-                    $result = DbRepository::getDb()->findAuthorById($id);
+                    $result = DbRepository::getDb()->findBookById($id);
                 }
                 break;
         }
@@ -166,19 +176,24 @@ class ApiController extends \mvc\controller\ApiController
     }
 
     public function bookphoto($id){
-        $path = $this->saveFile($_FILES['file']);
-        $bookPhoto = ['idBook' => $id, "path" => $path];
-        $result = DbRepository::getDb()->addPhotoToBook($bookPhoto) > 0 ? true : false;
+        if(!empty(DbRepository::getDb()->findBookById($id))) {
+            $path = $this->saveFile($_FILES['file'], $id);
+            $bookPhoto = [BooksPhotos::getModelFileds()['idBook'] => (int)$id, BooksPhotos::getModelFileds()['path'] => $path];
+            DbRepository::getDb()->addPhotoToBook($bookPhoto);
+            $result = true;
+        }
+        else {
+            $result = false;
+        }
         $this->json($result);
     }
 
-    private function saveFile($file){
+    private function saveFile($file, $idBook){
         $uploaddir = DbConfig::$config['file']['upload_dir'];
-        $uploadfile = $uploaddir . basename($file['name']);
-
-        echo '<pre>';
+        $pathUrl = $uploaddir . $idBook . "_" . basename($file['name']);
+        $uploadfile = $_SERVER['DOCUMENT_ROOT'] . $pathUrl;
         if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
-            return $uploadfile;
+            return $pathUrl;
         } else {
             return null;
         }

@@ -16305,3 +16305,7 @@ ul {
 .hidden{
   display: none!important;
 }
+.errors p{
+  color: red;
+  text-align: center;
+}

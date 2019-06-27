@@ -30,15 +30,18 @@ class AdminController extends BaseController
     }
 
     public function login(){
-
+        $results = [];
         if(!empty($_REQUEST) && isset($_REQUEST['username']) && isset($_REQUEST["password"]) ){
             $user = DbRepository::getDb()->loginUser($_REQUEST['username'], User::getHashPassword($_REQUEST["password"]));
             if(isset($user) && !empty($user)){
                 $_SESSION['user'] = $user->toArray();
                 \Application::redirect("admin/index");
+            }else{
+                $results["error"] = "Логин или пароль неверный";
             }
+
         }
-        $this->render("login", [], false);
+        $this->render("login", $results, false);
     }
 
     public function index(){

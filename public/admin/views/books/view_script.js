@@ -68,7 +68,7 @@ function generateTablePhotos(json) {
 }
 
 function updateTable(thisLi, dataId, dataName) {
-    var url = `${URL_API}/books/childs`;
+    var url = `${URL_API}/bookschilds`;
 
     if (dataId != "null") {
         url += "/" + dataId;
@@ -132,7 +132,7 @@ function addEventHandlers() {
         const dataName = $(this).attr("data-name");
         $.ajax({
             method: "GET",
-            url: `${URL_API}/books/childs/${dataId}`,
+            url: `${URL_API}/bookschilds/${dataId}`,
             success: function (json) {
                 generateTable(json, dataId, dataName);
             },
@@ -257,10 +257,10 @@ $("#btnAddAuthor").click(function (e) {
 });
 
 $("#btnAddPhoto").click(function (e) {
-    var url = `${URL_API}/books/photo/${bookId}`;
+    var url = `${URL_API}/bookphoto/${bookId}`;
     var formData = new FormData;
 
-    formData.append('uploadFile', $("#uploadFile").prop('files')[0]);
+    formData.append('file', $("#uploadFile").prop('files')[0]);
     $.ajax({
         url: url,
         method: "POST",

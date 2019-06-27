@@ -61,35 +61,35 @@
             </tr>
             </thead>
             <tbody id="author-body">
-            <?php
-            if(count($book['authors']) > 0){
-                foreach ($book['authors'] as $author){?>
+            <?php if(is_array($book['authors']) && count($book['authors']) > 0) {
+                foreach ($book['authors'] as $author) { ?>
                     <tr data-id="<?=$author['id']?>" data-name="<?=$author['name']?>">
                         <td><?=$author['id']?></td>
                         <td><?=$author['name']?></td>
                     </tr>
-                <?php}
-            }else {?>
-                <tr>
-                    <td colspan="2">Not found authors</td>
-                </tr>
-            <?php}
-            ?>
+                <?php } ?>
+
+            <?php }else{?>
+                <tr><td colspan="2">Not found authors</td></tr>
+            <?php } ?>
             </tbody>
         </table>
     </div>
 
     <form id="add-author">
-        <div class="form-group"><label class="form-control-label" for="form-add-author-id">Authors:</label>
+        <div class="form-group">
+            <label class="form-control-label" for="recipient-name">Authors:</label>
             <select class="form-control" id="form-add-author-id">
                 <?php foreach ($authors as $author) { ?>
-                    <option value="<?=$author['id'] ?>"><?= $author['name'] ?></option>
+                    <option value="<?=$author['id']?>"><?=$author['name']?></option>
                 <?php } ?>
             </select>
         </div>
         <button class="btn btn-primary" id="btnAddAuthor" type="button">Add author</button>
     </form>
+
     <h3>Photos book</h3>
+
     <div class="table-responsive">
         <table class="table table-hover">
             <thead>
@@ -99,26 +99,30 @@
             </tr>
             </thead>
             <tbody id="photo-body">
-            <?php if(count($book['photos']) > 0){
-                foreach ($book['photos'] as $photo){?>
+            <?php if(is_array($book['photos']) && count($book['photos']) > 0) {
+                foreach ($book['photos'] as $photo) { ?>
                     <tr data-path="<?=$photo['path']?>">
                         <td><img src="<?=$photo['path']?>"></td>
                         <td><?=$photo['path']?></td>
                     </tr>
-                <?php}
-            }else{?>
-                <tr>
-                    <td colspan="2">Not found photos</td>
-                </tr>
-            <?php}?>
+                <?php } ?>
+
+            <?php }else{?>
+                <tr><td colspan="2">Not found photos</td></tr>
+            <?php } ?>
             </tbody>
         </table>
     </div>
+
     <form id="add-photo" enctype="multipart/form-data">
         <div class="form-group">
-            <label class="form-control-label" for="image">Choose file <input class="form-control" type="file" id="uploadFile"/></label>
+            <label class="form-control-label" for="image">
+                Choose file
+                <input class="form-control" type="file" id="uploadFile"/>
+            </label>
         </div>
         <button class="btn btn-primary" id="btnAddPhoto" type="button">Add Photo</button>
     </form>
+
 </div>
 <script src="<?=PUBLIC_URL?>admin/views/books/view_script.js"></script>

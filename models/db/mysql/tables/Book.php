@@ -70,4 +70,15 @@ class Book extends ActiveRecord implements IMigration
             return null;
         }
     }
+
+    public function deleteByCategoryId($categoryId){
+        try{
+            $thisFields = static::getModelFileds();
+
+        }catch (\Exception $ex){
+            echo $ex;
+            return null;
+        }
+
+    }
 }
