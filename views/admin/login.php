@@ -28,12 +28,12 @@
                     <div class="auto-form-wrapper">
                         <form method="POST">
                             <div class="form-group"><label class="label">Username</label>
-                                <div class="input-group"><input class="form-control" type="text" name="username" placeholder="Username">
+                                <div class="input-group"><input class="form-control" type="text" name="username" placeholder="Username" value="admin">
                                     <div class="input-group-append"><span class="input-group-text"><i class="mdi mdi-check-circle-outline"></i></span></div>
                                 </div>
                             </div>
                             <div class="form-group"><label class="label">Password</label>
-                                <div class="input-group"><input class="form-control" type="password" name="password" placeholder="*********">
+                                <div class="input-group"><input class="form-control" type="password" name="password" placeholder="*********" value="admin">
                                     <div class="input-group-append"><span class="input-group-text"><i class="mdi mdi-check-circle-outline"></i></span></div>
                                 </div>
                             </div>
